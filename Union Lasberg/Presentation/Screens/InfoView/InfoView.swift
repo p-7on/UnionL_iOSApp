@@ -55,6 +55,7 @@ struct InfoView: View {
                 .shadow(radius: 5)
                 .padding([.bottom, .leading, .trailing])
         }
+        .background(Color.ulBackground)
         .overlay(alignment: .topTrailing) {
             Button {
                 dismiss()

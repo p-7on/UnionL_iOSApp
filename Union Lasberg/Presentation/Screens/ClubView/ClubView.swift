@@ -39,6 +39,7 @@ struct ClubView: View {
                     
             }
             .navigationTitle("Verein")
+            .background(Color.ulBackground)
             .navigationDestination(for: Post.self) { post in
                 HomePostDetailView(post: post)
             }

@@ -32,7 +32,7 @@ struct CalendarEventCell: View {
             .padding()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white)
+        .background(Color.ulBackground)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.3), radius: 20, x: 5, y: 5)
         .padding([.leading, .trailing])

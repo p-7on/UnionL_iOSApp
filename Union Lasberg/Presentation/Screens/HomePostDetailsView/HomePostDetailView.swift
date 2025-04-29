@@ -35,6 +35,7 @@ struct HomePostDetailView: View {
                 Spacer()
             }
         }
+        .background(Color.ulBackground)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                     ShareLink(item: URL(string: post.link)!) {

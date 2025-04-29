@@ -51,6 +51,7 @@ struct HomeView: View {
                 .padding(.bottom)
             }
             .navigationTitle("Home")
+            .background(Color.ulBackground)
             .navigationDestination(for: Post.self, destination: { post in
                 HomePostDetailView(post: post)
             })
@@ -58,8 +59,6 @@ struct HomeView: View {
                 viewModel.posts.removeAll()
                 viewModel.fetchHomePosts()
             }
-            .background(.white)
-            
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

@@ -23,7 +23,7 @@ struct CalendarView: View {
                         .shadow(color: .black.opacity(0.5), radius: 10, x: 5, y: 5)
                         .padding([.leading, .trailing])
                         .frame(maxWidth: .infinity)
-                        .background(.white)
+                        .background(Color.ulBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                         .shadow(color: .black.opacity(0.3), radius: 10, x: 5, y: 5)
                         .padding()
@@ -43,6 +43,7 @@ struct CalendarView: View {
                     
             }
             .navigationTitle("Kalender")
+            .background(Color.ulBackground)
         }
         
     }

@@ -82,9 +82,15 @@ struct SectionView: View {
     
                 
             .navigationTitle("Sektionen")
+            .background(Color.ulBackground)
             .navigationDestination(for: Post.self) { post in
                 HomePostDetailView(post: post)
             }
+        }
+        .alert(viewModel.alertItem?.title ?? Text("Error"), isPresented: $viewModel.isAlertShowing, presenting: viewModel.alertItem) { alertItem in
+            Button("OK", role: .cancel) { viewModel.isAlertShowing = false }
+        } message: { alertItem in
+            alertItem.message
         }
     }
 }

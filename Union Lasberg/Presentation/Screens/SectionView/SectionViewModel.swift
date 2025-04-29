@@ -26,42 +26,32 @@ class SectionViewModel: ObservableObject {
     private let sectionPostUseCase = PostUseCase(repository: PostRepository())
     
     init() {
-        // fetchSectionPosts(from: .soccerPosts)
         fetchAllSectionPosts()
     }
     
     func fetchAllSectionPosts() {
         isLoading = true
 
-        let soccerPublisher = sectionPostUseCase.getAllPosts(from: .soccerPosts)
-            .handleEvents(receiveOutput: { self.soccerPosts = $0 })
-            .catch { error -> Just<[Post]> in
-                self.handleError(error) // 🔹 Fehlerbehandlung
-                return Just([])
-            }
+        let endpoints: [(APIEndpoint, ReferenceWritableKeyPath<SectionViewModel, [Post]>)] = [
+            (.soccerPosts, \.soccerPosts),
+            (.tennisPosts, \.tennisPosts),
+            (.fitnessPosts, \.fitnessPosts),
+            (.runningPosts, \.runningPosts)
+        ]
 
-        let tennisPublisher = sectionPostUseCase.getAllPosts(from: .tennisPosts)
-            .handleEvents(receiveOutput: { self.tennisPosts = $0 })
-            .catch { error -> Just<[Post]> in
-                self.handleError(error)
-                return Just([])
-            }
+        let publishers = endpoints.map { endpoint, keyPath in
+            sectionPostUseCase.getAllPosts(from: endpoint)
+                .handleEvents(receiveOutput: { [weak self] posts in
+                    self?[keyPath: keyPath] = posts
+                })
+                .catch { [weak self] error -> Just<[Post]> in
+                    self?.handleError(error)
+                    return Just([])
+                }
+        }
 
-        let fitnessPublisher = sectionPostUseCase.getAllPosts(from: .fitnessPosts)
-            .handleEvents(receiveOutput: { self.fitnessPosts = $0 })
-            .catch { error -> Just<[Post]> in
-                self.handleError(error)
-                return Just([])
-            }
-
-        let runningPublisher = sectionPostUseCase.getAllPosts(from: .runningPosts)
-            .handleEvents(receiveOutput: { self.runningPosts = $0 })
-            .catch { error -> Just<[Post]> in
-                self.handleError(error)
-                return Just([])
-            }
-
-        Publishers.Merge4(soccerPublisher, tennisPublisher, fitnessPublisher, runningPublisher)
+        Publishers.MergeMany(publishers)
+            .collect()
             .sink(receiveCompletion: { _ in
                 self.isLoading = false
             }, receiveValue: { _ in })
@@ -82,49 +72,6 @@ class SectionViewModel: ObservableObject {
             }
         }
     }
-
-    
-    /*
-    func fetchSectionPosts(from endpoint: APIEndpoint) {
-        isLoading = true
-        sectionPostUseCase.getAllPosts(from: endpoint)
-            .sink { completion in
-                self.isLoading = false
-                switch completion {
-                case .failure(let error):
-                    switch error {
-                    case .invalidURL:
-                        self.showAlert(AlertContext.invalidURL)
-                    case .invalidResponse:
-                        self.showAlert(AlertContext.invalidResponse)
-                    case .invalidData:
-                        self.showAlert(AlertContext.invalidData)
-                    case .unableToComplete:
-                        self.showAlert(AlertContext.unableToComplete)
-                    }
-                case .finished:
-                    print("loaded section posts successfully...")
-                }
-            } receiveValue: { posts in
-                switch endpoint {
-                case .soccerPosts:
-                    self.soccerPosts = posts
-                case .tennisPosts:
-                    self.tennisPosts = posts
-                case .runningPosts:
-                    self.runningPosts = posts
-                case .fitnessPosts:
-                    self.fitnessPosts = posts
-                default:
-                    print("no action")
-                }
-                self.isLoading = false
-            }
-            .store(in: &cancellables)
-    }
-     */
-    
-
     
     func showAlert(_ alert: AlertItem) {
         alertItem = alert

@@ -14,7 +14,7 @@ struct FilterCell: View {
     
     var body: some View {
         Text(filterCategory.rawValue)
-            .foregroundStyle(Color.ulBlue)
+            .foregroundStyle(selectedFilter == filterCategory ? Color.white : Color.ulBlue)
             .fontWeight(.semibold)
             .padding()
             .background(selectedFilter == filterCategory ? Color.ulRed : Color.ulBlue.opacity(0.1))
