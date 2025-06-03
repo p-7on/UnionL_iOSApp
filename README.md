@@ -10,6 +10,7 @@ The app displays posts, events, and contact information for the club's sections 
 - Contact button to send emails
 - Light/Dark mode support
 - Data source: JSON files mixed with XML elements (parsed accordingly)
+- Error Handling: Alerts in case of network error
 
 
 🛠️ Tech Stack & Architecture
